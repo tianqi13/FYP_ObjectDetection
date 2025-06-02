@@ -1,4 +1,4 @@
-# FYP Object Detection (YOLO-World)
+# Object Detection with 3D Bounding Boxes
 A YOLO-World and DepthAnythingV2 based object detection pipeline for underwater object detection. 
 
 ## Installation Steps
