@@ -15,8 +15,8 @@ from bbox3d import BBox3d
 source = "test.mp4"  
 output_path = "output_bbox_video.mp4"  
 class_names=['water bottle', 'cup', 'soda can', 'cone']
-detector = ObjectDetector(model_config='small', model_weights='finetuned', class_names=class_names) #can change between 'small' and 'medium', 'pretrained' and 'finetuned'
-depth_estimator = DepthEstimator(model_config='vits')                                               #can change between 'vits' and 'vitb' and 'vitl'
+detector = ObjectDetector(model_config='small', model_weights='finetuned', class_names=class_names) #can change between 'pretrained' and 'finetuned'
+depth_estimator = DepthEstimator(model_config='vits')                                               
 # '''
 
 colours = [(204, 40, 40), (216, 138, 21), (183, 229, 0), (87, 242, 48), (25, 255, 117), (0, 204, 204), (43, 112, 216), (64, 22, 229), (193, 0, 242), (255, 50, 173)]
