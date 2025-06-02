@@ -14,14 +14,16 @@ from bbox3d import BBox3d
 path_to_image = 'img_L.png'
 class_names=['bottle', 'cup', 'soda can', 'cone']
 detector = ObjectDetector(model_config='small', model_weights='finetuned', class_names=class_names)   #can change between 'pretrained' and 'finetuned'
-depth_estimator = DepthEstimator(model_config='vits')                                               
+depth_estimator = DepthEstimator(model_config='vits')     
+score_thr = 0.65 #reduce this if you want to detect more objects, but it will also increase false positives
+nms_thr = 0.5                                   
 # '''
  
 colours = [(204, 40, 40), (216, 138, 21), (183, 229, 0), (87, 242, 48), (25, 255, 117), (0, 204, 204), (43, 112, 216), (64, 22, 229), (193, 0, 242), (255, 50, 173)]
 
 # Load models
 frame = cv2.imread(path_to_image) 
-detections = detector.detect(frame, max_num_boxes=100, score_thr=0.05, nms_thr=0.2)
+detections = detector.detect(frame, max_num_boxes=100, score_thr=score_thr, nms_thr=nms_thr)
 boxes = [detection[0] for detection in detections]
 depth_map = depth_estimator.estimate_depth(frame, input_size=367)
 
