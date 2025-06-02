@@ -59,3 +59,8 @@ score_thr = 0.65 #reduce this if you want to detect more objects, but it will al
 nms_thr = 0.5                                              
 # '''
 ```
+
+You can also download a sample video "test.txt". 
+```bash
+wget https://huggingface.co/Tianqi13/FYP_ObjectDetection/resolve/main/test.mp4
+```
