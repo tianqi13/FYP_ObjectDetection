@@ -38,7 +38,7 @@ model_test_cfg = dict(
 # -----data related-----
 img_scale = (640, 640)  # width, height
 # Dataset type, this will be used to define the dataset
-dataset_type = 'YOLOv5TankDataset'
+dataset_type = 'YOLOv5CocoDataset'
 # Batch size of a single GPU during validation
 val_batch_size_per_gpu = 1
 # Worker to pre-fetch data for each single GPU during validation

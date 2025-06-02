@@ -1,0 +1,53 @@
+# FYP Object Detection (YOLO-World)
+A YOLO-World and DepthAnythingV2 based object detection pipeline for underwater object detection. 
+
+## Installation Steps
+1. Clone this repository
+```bash
+git clone https://github.com/tianqi13/FYP_ObjectDetection.git
+cd FYP_ObjectDetection/ObjectDetection
+```
+2. Install required packages 
+```bash
+pip install -r requirements.txt
+```
+Next, install **mmcv**. YOLO-World is built on mmcv, and the newest pre-built package only supports cuda 12.1 and torch 2.4. The other option is to build from scratch, but this takes a much longer time. 
+
+```bash
+pip install mmcv==2.2.0 -f https://download.openmmlab.com/mmcv/dist/cu121/torch2.4/index.html
+```
+
+3. Download checkpoints
+YOLO-World:
+```bash
+mkdir -p YOLO_world/weights/finetune
+wget -P YOLO_world/weights/finetune https://huggingface.co/Tianqi13/FYP_ObjectDetection/resolve/main/s_finetuned.pth
+
+mkdir YOLO_world/weights/pre_train
+wget -P YOLO_world/weights/pre_train https://huggingface.co/wondervictor/YOLO-World-V2.1/resolve/main/s_stage2-4466ab94.pth
+
+```
+
+DepthAnythingV2:
+```bash
+mkdir -p DepthV2/checkpoints
+
+#vits works fine, but if you want to use other configurations you can download all the weights
+wget -P DepthV2/checkpoints https://huggingface.co/depth-anything/Depth-Anything-V2-Small/resolve/main/depth_anything_v2_vits.pth 
+```
+
+## Run Demo 
+The 2 python scripts for demonstration are: 
+1. run_image.py: This draws bounding boxes on an input image. The output image is labelled output_bbox_image.png
+2. run_video.py: This draws bounding boxes on an input video. The output video is labelled output_bbox_video.mp4
+
+You can change the image/video inputs, as well as the detection prompts(class_names) and model configurations in these files. Look for this part at the top of the script:
+
+```python
+# ''' CHANGE CONFIGURATIONS IF NEEDED
+path_to_image = 'img_L.png'
+class_names=['bottle', 'cup', 'soda can', 'cone']
+detector = ObjectDetector(model_config='small', model_weights='finetuned', class_names=class_names)   
+depth_estimator = DepthEstimator(model_config='vits')                                                 
+# '''
+```

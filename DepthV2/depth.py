@@ -47,8 +47,8 @@ class DepthEstimator:
         Returns:
             numpy.ndarray: Depth map (normalized to 0-1)
         """
-        
-        depth = self.depth_anything.infer_image(image, input_size)
+        with torch.no_grad():
+            depth = self.depth_anything.infer_image(image, input_size)
 
         if normalise:
             # Normalize depth to 0-1

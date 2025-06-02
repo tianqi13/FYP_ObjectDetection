@@ -15,51 +15,43 @@ from mmyolo.registry import VISUALIZERS
 
 class ObjectDetector:
     """
-    Object detection using YOLO World
+    Object detection using YOLO-World
     """
     def __init__(self, model_config='small', model_weights='untrained', class_names=None):
         """
         Initialize YOLO World
         
         Args:
-            model_config (str): Model size ('small', 'medium')
-            model_weights (str): Model weights ('pretrained', 'finetuned')
+            model_config (str): Model size ('small', 'medium', 'large', 'extra')
+            model_weights (str): Model weights ('untrained', 'trained')
             class_names (list): List of class names to detect
         """
         HERE = os.path.dirname(__file__)
         
         model_config_paths = {
-            'small':  os.path.join(HERE, 'configs', 'yolo_world_v2_s_vlpan_bn_2e-3_100e_4x8gpus_obj365v1_goldg_train_1280ft_lvis_minival.py'),
-            'medium': os.path.join(HERE, 'configs', 'yolo_world_v2_m_vlpan_bn_2e-3_100e_4x8gpus_obj365v1_goldg_train_lvis_minival.py')
+            'small': os.path.join(HERE, 'configs', 'yolo_world_v2_s_vlpan_bn_2e-3_100e_4x8gpus_obj365v1_goldg_train_1280ft_lvis_minival.py')
         }
-        
         CONFIG_PATH = model_config_paths.get(model_config, model_config_paths['small'])
         
         model_weight_paths = {
             'small': {
-                'pretrained': os.path.join(HERE, 'weights', 'pre_train',  's_stage2-4466ab94.pth'),
-                'finetuned':   os.path.join(HERE, 'weights', 'finetune',   's_finetuned.pth')
-            },
-            'medium': {
-                'pretrained': os.path.join(HERE, 'weights', 'pre_train',  'm_stage1-7e1e5299.pth'),
-                'finetuned':   os.path.join(HERE, 'weights', 'finetune',   'm_finetuned.pth')
+                'pretrained': os.path.join(HERE, 'weights', 'pre_train', 's_stage2-4466ab94.pth'),
+                'finetuned': os.path.join(HERE, 'weights', 'finetune', 's_finetuned.pth')
             }
         }
 
         WEIGHTS_PATH = model_weight_paths.get(model_config, {}).get(model_weights, model_weight_paths['small']['pretrained'])
     
         DEVICE = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
-
         self.model = init_detector(CONFIG_PATH, WEIGHTS_PATH, device=DEVICE)
 
-        self.model.cfg.test_dataloader.dataset.pipeline[0].type = 'mmdet.LoadImageFromNDArray'
-        self.test_pipeline = Compose(self.model.cfg.test_dataloader.dataset.pipeline)
+        # Update pipeline
+        self.test_pipeline = Compose(self.model.cfg.test_pipeline)
 
         if class_names is None:
             self.class_names = []
         else:
             self.class_names = class_names
-        
         self.texts = [[t.strip()] for t in class_names] + [[" "]]
         self.model.reparameterize(self.texts)
 
@@ -114,29 +106,10 @@ class ObjectDetector:
             detections.append([bbox, score, class_id, object_id])
 
         return output, detections
-    
-    def detect(self, input_frame, max_num_boxes=100, score_thr=0.5, nms_thr=0.5):
-        """
-        Detect objects in a frame and return detections 
-        Args:
-            input_frame (numpy.ndarray): Input image frame
-            max_num_boxes (int): Maximum number of boxes to detect
-            score_thr (float): Score threshold for detection
-            nms_thr (float): NMS threshold for detection
-        Returns:
-            annotated_image (numpy.ndarray): Annotated image with detected objects
-            detections (list): List of detected objects with bounding boxes, scores, class IDs, and object IDs
-        """
-        result, detections = self.inference_detector(input_frame,
-                                                     max_num_boxes=max_num_boxes,
-                                                     score_thr=score_thr,
-                                                     nms_thr=nms_thr)
-
-        return detections
 
     def detect_and_plot(self, input_frame, max_num_boxes=100, score_thr=0.5, nms_thr=0.5):
         """
-        Detect objects in a frame and return annotated frame for printing 
+        Detect objects in a frame and outputs a numpy array of the annotated image
         Args:
             input_frame (numpy.ndarray): Input image frame
             max_num_boxes (int): Maximum number of boxes to detect
@@ -166,6 +139,26 @@ class ObjectDetector:
 
         return annotated_image, detections
     
+    def detect(self, input_frame, max_num_boxes=100, score_thr=0.5, nms_thr=0.5):
+        """
+        Detect objects in a frame
+        Args:
+            input_frame (numpy.ndarray): Input image frame
+            max_num_boxes (int): Maximum number of boxes to detect
+            score_thr (float): Score threshold for detection
+            nms_thr (float): NMS threshold for detection
+        Returns:
+            annotated_image (numpy.ndarray): Annotated image with detected objects
+            detections (list): List of detected objects with bounding boxes, scores, class IDs, and object IDs
+        """
+        result, detections = self.inference_detector(input_frame,
+                                                     max_num_boxes=max_num_boxes,
+                                                     score_thr=score_thr,
+                                                     nms_thr=nms_thr)
+
+        return detections
+
+
     def get_class_names(self):
         """
         Get the names of the classes that the model can detect
@@ -174,7 +167,8 @@ class ObjectDetector:
 
 if __name__ == "__main__":
     # Example usage
-    detector = ObjectDetector(model_config='small', model_weights='trained', class_names=['cone', 'cup', 'bottle'])
+    detector = ObjectDetector(model_config='small', model_weights='finetuned', class_names=['cone', 'cup', 'bottle'])
     image = cv2.imread('img_L.png')
     annotated_image, detections = detector.detect_and_plot(image, score_thr=0.2)
-    cv2.imwrite('output_s.png', annotated_image)
+    cv2.imwrite('output.png', annotated_image)
+    classes = detector.get_class_names()

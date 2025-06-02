@@ -6,3 +6,9 @@ output_bbox_image.png
 output_bbox_video.mp4
 
 test.mp4
+final_code
+
+bin 
+lib
+share
+pyenv.cfg

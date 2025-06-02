@@ -2,6 +2,7 @@ import sys
 import os
 import cv2
 import time
+import torch
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'YOLO_world'))
 sys.path.append(os.path.join(os.path.dirname(__file__), 'DepthV2'))
