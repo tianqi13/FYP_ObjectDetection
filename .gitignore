@@ -1,0 +1,8 @@
+DepthV2/checkpoints
+YOLO_world/weights/finetune
+YOLO_world/weights/pre_train
+
+output_bbox_image.png
+output_bbox_video.mp4
+
+test.mp4
