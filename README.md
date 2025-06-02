@@ -11,10 +11,16 @@ cd FYP_ObjectDetection/ObjectDetection
 ```bash
 pip install -r requirements.txt
 ```
-Next, install **mmcv**. YOLO-World is built on mmcv, and the newest pre-built package only supports cuda 12.1 and torch 2.4. The other option is to build from scratch, but this takes a much longer time. 
+Next, install **mmcv**. YOLO-World is built on mmcv, and the newest pre-built package only supports cuda 12.1 and torch 2.4.
 
 ```bash
 pip install mmcv==2.2.0 -f https://download.openmmlab.com/mmcv/dist/cu121/torch2.4/index.html
+```
+
+The other option is to build mmcv from source, but this takes a much longer time (not recommended).
+```bash
+pip install -U openmim
+mim install mmcv==2.2.0
 ```
 
 3. Download checkpoints
