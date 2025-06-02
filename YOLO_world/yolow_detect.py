@@ -52,6 +52,11 @@ class ObjectDetector:
             self.class_names = []
         else:
             self.class_names = class_names
+        n = len(self.class_names)
+
+        self.model.cfg.model.bbox_head.head_module.num_classes = n
+        self.model.cfg.model.train_cfg.assigner.num_classes = n
+        
         self.texts = [[t.strip()] for t in class_names] + [[" "]]
         self.model.reparameterize(self.texts)
 
@@ -167,7 +172,7 @@ class ObjectDetector:
 
 if __name__ == "__main__":
     # Example usage
-    detector = ObjectDetector(model_config='small', model_weights='finetuned', class_names=['cone', 'cup', 'bottle'])
+    detector = ObjectDetector(model_config='small', model_weights='finetuned', class_names=['cone', 'bottle', 'cup'])
     image = cv2.imread('img_L.png')
     annotated_image, detections = detector.detect_and_plot(image, score_thr=0.2)
     cv2.imwrite('output.png', annotated_image)
