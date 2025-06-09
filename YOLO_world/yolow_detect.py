@@ -17,7 +17,7 @@ class ObjectDetector:
     """
     Object detection using YOLO-World
     """
-    def __init__(self, model_config='small', model_weights='untrained', class_names=None):
+    def __init__(self, model_weights='finetuned', class_names=None):
         """
         Initialize YOLO World
         
@@ -28,24 +28,18 @@ class ObjectDetector:
         """
         HERE = os.path.dirname(__file__)
         
-        model_config_paths = {
-            'small': os.path.join(HERE, 'configs', 'yolo_world_v2_s_vlpan_bn_2e-3_100e_4x8gpus_obj365v1_goldg_train_1280ft_lvis_minival.py')
-        }
-        CONFIG_PATH = model_config_paths.get(model_config, model_config_paths['small'])
+        CONFIG_PATH = os.path.join(HERE, 'configs', 'large.py')
         
         model_weight_paths = {
-            'small': {
-                'pretrained': os.path.join(HERE, 'weights', 'pre_train', 's_stage2-4466ab94.pth'),
-                'finetuned': os.path.join(HERE, 'weights', 'finetune', 's_finetuned.pth')
-            }
+            'pretrained': os.path.join(HERE, 'weights', 'pre_train', 'l_stage2-b3e3dc3f.pth'),
+            'finetuned': os.path.join(HERE, 'weights', 'finetune', 'l_finetuned.pth')
+            'prompt-tuned': os.path.join(HERE, 'weights', 'prompt_tune', 'l_prompt_tuned.pth')
         }
 
-        WEIGHTS_PATH = model_weight_paths.get(model_config, {}).get(model_weights, model_weight_paths['small']['pretrained'])
+        WEIGHTS_PATH = model_weight_paths.get(model_weights, model_weight_paths['finetuned'])
     
         DEVICE = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
         self.model = init_detector(CONFIG_PATH, WEIGHTS_PATH, device=DEVICE)
-
-        # Update pipeline
         self.test_pipeline = Compose(self.model.cfg.test_pipeline)
 
         if class_names is None:
@@ -172,7 +166,7 @@ class ObjectDetector:
 
 if __name__ == "__main__":
     # Example usage
-    detector = ObjectDetector(model_config='small', model_weights='finetuned', class_names=['cone', 'bottle', 'cup'])
+    detector = ObjectDetector(model_weights='finetuned', class_names=['cone', 'bottle', 'cup'])
     image = cv2.imread('img_L.png')
     annotated_image, detections = detector.detect_and_plot(image, score_thr=0.2)
     cv2.imwrite('output.png', annotated_image)

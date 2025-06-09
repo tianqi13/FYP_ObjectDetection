@@ -1,20 +1,17 @@
-_base_ = ('../third_party/mmyolo/configs/yolov8/'
-          'yolov8_s_syncbn_fast_8xb16-500e_coco.py')
+#TRAINS FROM SCRATCH
+_base_ = ('../../third_party/mmyolo/configs/yolov8/'
+          'yolov8_l_syncbn_fast_8xb16-500e_coco.py')
 custom_imports = dict(imports=['yolo_world'],
                       allow_failed_imports=False)
-#custom_imports = dict(imports=['mmdet.datasets.CocoDataset'], allow_failed_imports=False)
+
 # hyper-parameters
 num_classes = 5
 num_training_classes = 5
-max_epochs = 25  # Maximum training epochs
-close_mosaic_epochs = 2
-save_epoch_intervals = 5
 text_channels = 512
 neck_embed_channels = [128, 256, _base_.last_stage_out_channels // 2]
 neck_num_heads = [4, 8, _base_.last_stage_out_channels // 2 // 32]
-base_lr = 2e-4
-weight_decay = 0.025
-train_batch_size_per_gpu = 4
+# text_model_name = '../pretrained_models/clip-vit-base-patch32-projection'
+text_model_name = 'openai/clip-vit-base-patch32'
 img_scale = (1280,1280)
 
 # model settings
@@ -30,7 +27,7 @@ model = dict(
         image_model={{_base_.model.backbone}},
         text_model=dict(
             type='HuggingCLIPLanguageBackbone',
-            model_name='openai/clip-vit-base-patch32',
+            model_name=text_model_name,
             frozen_modules=['all'])),
     neck=dict(type='YOLOWorldPAFPN',
               guide_channels=text_channels,
@@ -41,8 +38,9 @@ model = dict(
                    head_module=dict(type='YOLOWorldHeadModule',
                                     use_bn_head=True,
                                     embed_dims=text_channels,
-                                    num_classes=num_classes)),
-    train_cfg=dict(assigner=dict(num_classes=num_classes)))
+                                    num_classes=num_training_classes)),
+    train_cfg=dict(assigner=dict(num_classes=num_training_classes)))
+
 
 test_pipeline = [
     dict(type='mmdet.LoadImageFromNDArray'),

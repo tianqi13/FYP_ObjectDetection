@@ -13,7 +13,7 @@ from bbox3d import BBox3d
 # ''' CHANGE CONFIGURATIONS IF NEEDED
 path_to_image = 'img_L.png'
 class_names=['bottle', 'cup', 'soda can', 'cone']
-detector = ObjectDetector(model_config='small', model_weights='finetuned', class_names=class_names)   #can change between 'pretrained' and 'finetuned'
+detector = ObjectDetector(model_weights='finetuned', class_names=class_names)   #can change between 'pretrained', 'finetuned' and 'prompt-tuned'
 depth_estimator = DepthEstimator(model_config='vits')     
 score_thr = 0.65 #reduce this if you want to detect more objects, but it will also increase false positives
 nms_thr = 0.5                                   

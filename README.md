@@ -26,12 +26,14 @@ mim install mmcv==2.2.0
 3. Download checkpoints
 YOLO-World:
 ```bash
-mkdir -p YOLO_world/weights/finetune
-wget -P YOLO_world/weights/finetune https://huggingface.co/Tianqi13/FYP_ObjectDetection/resolve/main/s_finetuned.pth
-
 mkdir YOLO_world/weights/pre_train
-wget -P YOLO_world/weights/pre_train https://huggingface.co/wondervictor/YOLO-World-V2.1/resolve/main/s_stage2-4466ab94.pth
+wget -P YOLO_world/weights/pre_train https://huggingface.co/wondervictor/YOLO-World-V2.1/resolve/main/l_stage2-b3e3dc3f.pth
 
+mkdir -p YOLO_world/weights/finetune
+wget -P YOLO_world/weights/finetune 
+
+mkdir YOLO_world/weights/prompt_tune
+wget -P YOLO_world/weights/prompt_tune https://huggingface.co/Tianqi13/FYP_ObjectDetection/resolve/main/l_prompt_tuned.pth
 ```
 
 DepthAnythingV2:
@@ -60,7 +62,7 @@ nms_thr = 0.5
 # '''
 ```
 
-You can also download a sample video "test.txt". 
+You can also download a sample video "test.mp4". 
 ```bash
 wget https://huggingface.co/Tianqi13/FYP_ObjectDetection/resolve/main/test.mp4
 ```
