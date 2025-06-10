@@ -30,7 +30,7 @@ mkdir YOLO_world/weights/pre_train
 wget -P YOLO_world/weights/pre_train https://huggingface.co/wondervictor/YOLO-World-V2.1/resolve/main/l_stage2-b3e3dc3f.pth
 
 mkdir -p YOLO_world/weights/finetune
-wget -P YOLO_world/weights/finetune 
+wget -P YOLO_world/weights/finetune https://huggingface.co/Tianqi13/FYP_ObjectDetection/resolve/main/l_finetune.pth
 
 mkdir YOLO_world/weights/prompt_tune
 wget -P YOLO_world/weights/prompt_tune https://huggingface.co/Tianqi13/FYP_ObjectDetection/resolve/main/l_prompt_tuned.pth
