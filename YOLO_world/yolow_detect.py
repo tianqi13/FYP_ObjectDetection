@@ -22,7 +22,6 @@ class ObjectDetector:
         Initialize YOLO World
         
         Args:
-            model_config (str): Model size ('small', 'medium', 'large', 'extra')
             model_weights (str): Model weights ('untrained', 'trained')
             class_names (list): List of class names to detect
         """
@@ -32,7 +31,7 @@ class ObjectDetector:
         
         model_weight_paths = {
             'pretrained': os.path.join(HERE, 'weights', 'pre_train', 'l_stage2-b3e3dc3f.pth'),
-            'finetuned': os.path.join(HERE, 'weights', 'finetune', 'l_finetuned.pth')
+            'finetuned': os.path.join(HERE, 'weights', 'finetune', 'l_finetune.pth')
             'prompt-tuned': os.path.join(HERE, 'weights', 'prompt_tune', 'l_prompt_tuned.pth')
         }
 
