@@ -5,7 +5,7 @@ A YOLO-World and DepthAnythingV2 based object detection pipeline for underwater 
 1. Clone this repository
 ```bash
 git clone https://github.com/tianqi13/FYP_ObjectDetection.git
-cd FYP_ObjectDetection/ObjectDetection
+cd FYP_ObjectDetection
 ```
 2. Install required packages 
 ```bash
@@ -24,6 +24,7 @@ mim install mmcv==2.2.0
 ```
 
 3. Download checkpoints
+
 YOLO-World:
 ```bash
 mkdir YOLO_world/weights/pre_train
