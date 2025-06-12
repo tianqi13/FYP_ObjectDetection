@@ -193,6 +193,42 @@ class DepthAnythingV2(nn.Module):
         
         return depth.cpu().numpy()
     
+    @torch.no_grad()
+    def infer_batch(self, raw_images, input_size=518):
+        """
+        Batch inference on a list of raw images.
+
+        Args:
+            raw_images (List[np.ndarray]): List of images.
+            input_size (int): Size used for preprocessing.
+
+        Returns:
+            List[np.ndarray]: Depth maps for each input image.
+        """
+        tensor_list, sizes = [], []
+        for img in raw_images:
+            tensor, (h, w) = self.image2tensor(img, input_size)
+            tensor_list.append(tensor)
+            sizes.append((h, w))
+
+        # stack into (B, C, H, W)
+        batch = torch.cat(tensor_list, dim=0)
+        batch = batch.to(next(self.parameters()).device)
+
+        # forward once
+        depth_batch = self.forward(batch)  # shape: [B, H_out, W_out]
+
+        results = []
+        for depth_map, (h, w) in zip(depth_batch, sizes):
+            d_up = F.interpolate(
+                depth_map[None, None],
+                (h, w),
+                mode='bilinear',
+                align_corners=True
+            )[0, 0]
+            results.append(d_up.cpu().numpy())
+        return results
+    
     def image2tensor(self, raw_image, input_size=518):        
         transform = Compose([
             Resize(
