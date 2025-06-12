@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 from mmengine.config import Config
-from mmengine.dataset import Compose
+from mmengine.dataset import Compose, default_collate
 from mmengine.runner import Runner
 from mmengine.runner.amp import autocast
 from mmyolo.registry import VISUALIZERS
