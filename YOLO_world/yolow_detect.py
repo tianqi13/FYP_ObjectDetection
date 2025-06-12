@@ -37,25 +37,15 @@ class ObjectDetector:
 
         WEIGHTS_PATH = model_weight_paths.get(model_weights, model_weight_paths['finetuned'])
     
-        DEVICE = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
-        self.model = init_detector(CONFIG_PATH, WEIGHTS_PATH, device=DEVICE)
+        self.device = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
+        self.model = init_detector(CONFIG_PATH, WEIGHTS_PATH, device=self.device)
         self.test_pipeline = Compose(self.model.cfg.test_pipeline)
 
-        if class_names is None:
-            self.class_names = []
-        else:
-            self.class_names = class_names
-        n = len(self.class_names)
-
-        self.model.cfg.model.bbox_head.head_module.num_classes = n
-        self.model.cfg.model.train_cfg.assigner.num_classes = n
-        
         self.texts = [[t.strip()] for t in class_names] + [[" "]]
         self.model.reparameterize(self.texts)
-
-        self.model.dataset_meta = {
-            'classes': self.class_names
-        }
+        
+        self.class_names = class_names or []
+        self.model.dataset_meta = {'classes': self.class_names}
 
 
     def inference_detector(self, image, max_num_boxes=100, score_thr=0.5, nms_thr=0.5):
