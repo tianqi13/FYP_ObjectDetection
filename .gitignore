@@ -1,5 +1,6 @@
 DepthV2/checkpoints
 YOLO_world/weights/
+EfficientViTSAM/assets/checkpoints/efficientvit_sam
 
 output_bbox_image.png
 output_bbox_video.mp4
@@ -11,3 +12,4 @@ bin
 lib
 share
 pyenv.cfg
+__pycache__

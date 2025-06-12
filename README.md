@@ -45,6 +45,14 @@ mkdir -p DepthV2/checkpoints
 wget -P DepthV2/checkpoints https://huggingface.co/depth-anything/Depth-Anything-V2-Small/resolve/main/depth_anything_v2_vits.pth 
 ```
 
+EfficientViTSAM:
+```bash
+mkdir -p EfficientViTSAM/assets/checkpoints/efficientvit_sam
+
+#vits works fine, but if you want to use other configurations you can download all the weights
+wget -P EfficientViTSAM/assets/checkpoints/efficientvit_sam https://huggingface.co/mit-han-lab/efficientvit-sam/resolve/main/efficientvit_sam_l0.pt
+```
+
 ## Run Demo 
 The 2 python scripts for demonstration are: 
 1. run_image.py: This draws bounding boxes on an input image. The output image is labelled output_bbox_image.png
@@ -58,7 +66,7 @@ You can change the image/video inputs, as well as the detection prompts(class_na
 # ''' CHANGE CONFIGURATIONS IF NEEDED
 path_to_image = 'img_L.png'
 class_names=['bottle', 'cup', 'soda can', 'cone']
-detector = ObjectDetector(model_config='small', model_weights='finetuned', class_names=class_names)   
+detector = ObjectDetector(model_weights='finetuned', class_names=class_names)   
 depth_estimator = DepthEstimator(model_config='vits')    
 score_thr = 0.65 #reduce this if you want to detect more objects, but it will also increase false positives
 nms_thr = 0.5                                              
