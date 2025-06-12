@@ -1,4 +1,4 @@
-_base_ = '/vol/bitbucket/th1422/YOLO-World/vscode/3d/YOLO_world/third_party/mmyolo/configs/yolov8/yolov8_s_syncbn_fast_8xb16-500e_coco.py'
+_base_ = './yolov8_s_syncbn_fast_8xb16-500e_coco.py'
 
 # ========================modified parameters======================
 deepen_factor = 0.67

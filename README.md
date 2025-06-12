@@ -50,6 +50,8 @@ The 2 python scripts for demonstration are:
 1. run_image.py: This draws bounding boxes on an input image. The output image is labelled output_bbox_image.png
 2. run_video.py: This draws bounding boxes on an input video. The output video is labelled output_bbox_video.mp4
 
+Note: You may run into this error: AssertionError: MMCV==2.2.0 is used but incompatible. Please install mmcv>=2.0.0rc4, <2.1.0. You can edit the source file's 'mmcv_maximum_version' to 2.2.1. There are two source files where this needs to be changed, one in python3.12/site-packages/mmdet/__init.py__ and another in python3.12/site-packages/mmyolo/__init.py__
+
 You can change the image/video inputs, as well as the detection prompts(class_names) and model configurations in these files. Look for this part at the top of the script:
 
 ```python

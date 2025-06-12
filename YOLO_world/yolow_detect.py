@@ -31,7 +31,7 @@ class ObjectDetector:
         
         model_weight_paths = {
             'pretrained': os.path.join(HERE, 'weights', 'pre_train', 'l_stage2-b3e3dc3f.pth'),
-            'finetuned': os.path.join(HERE, 'weights', 'finetune', 'l_finetune.pth')
+            'finetuned': os.path.join(HERE, 'weights', 'finetune', 'l_finetune.pth'),
             'prompt-tuned': os.path.join(HERE, 'weights', 'prompt_tune', 'l_prompt_tuned.pth')
         }
 
