@@ -4,6 +4,8 @@ EfficientViTSAM/assets/checkpoints/efficientvit_sam
 
 output_bbox_image.png
 output_bbox_video.mp4
+combined_pc.ply
+
 
 test.mp4
 final_code

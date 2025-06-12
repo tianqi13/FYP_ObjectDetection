@@ -77,3 +77,18 @@ You can also download a sample video "test.mp4".
 ```bash
 wget https://huggingface.co/Tianqi13/FYP_ObjectDetection/resolve/main/test.mp4
 ```
+
+For the map generation pipeline, you can run the script `run_map_gen.py`. 
+
+However, you will need to change the camera intrinsics, the `K.txt` file in the RoMa folder. 
+
+You will also need to provide the left and right keyframe images for stereo matching, and also the keyframe text file that contains the image name, tx, ty, tx, (T_cw) and qx, qy, qz, qw (Quaternion matrix for R_cw) for each keyframe.Change the paths in the script to point to your keyframe images and text file.
+
+'''python 
+keyframe_txt = 'map_gen/keyframe_images.txt'
+keyframe_L = 'map_gen/img_L_kp'
+keyframe_R = 'map_gen/img_R_kp'
+'''
+
+
+
