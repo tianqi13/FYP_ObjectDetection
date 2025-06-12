@@ -162,6 +162,76 @@ class ObjectDetector:
         Get the names of the classes that the model can detect
         """
         return self.class_names
+    
+    def inference_detector_batch(self, images, max_num_boxes=100, score_thr=0.5, nms_thr=0.5):
+        """
+        Run inference on all input images as a single batch.
+
+        Args:
+            images (List[numpy.ndarray]): List of H×W×3 BGR arrays.
+            score_thr (float): Score threshold to filter boxes.
+            nms_thr (float): IoU threshold for NMS.
+            max_num_boxes (int): Maximum boxes to keep per image.
+
+        Returns:
+            List[List[Tuple[list, float, int, Optional[int]]]]: per-image detections.
+        """
+        # Preprocess all images
+        data_list = []
+        for idx, img in enumerate(images):
+            data = {'img_id': idx, 'img': img, 'texts': self.texts}
+            data = self.test_pipeline(data)
+            data_list.append({
+                'inputs': data['inputs'],
+                'data_samples': data['data_samples']
+            })
+
+        # Collate into one batch and move to device
+        batch = default_collate(data_list)
+        for k, v in batch.items():
+            if isinstance(v, torch.Tensor):
+                batch[k] = v.to(self.device)
+
+        # Forward once
+        with torch.no_grad():
+            batch_outs = self.model.test_step(batch)
+
+        # Post-process each output
+        results = []
+        for out in batch_outs:
+            pred_instances = out.pred_instances
+            # a) score threshold
+            keep = pred_instances.scores > score_thr
+            pred_instances = pred_instances[keep]
+            # b) NMS
+            keep_idxs = nms(
+                pred_instances.bboxes,
+                pred_instances.scores,
+                iou_threshold=nms_thr
+            )
+            pred_instances = pred_instances[keep_idxs]
+            # c) top-k
+            if len(pred_instances.scores) > max_num_boxes:
+                topk_idxs = pred_instances.scores.topk(max_num_boxes).indices
+                pred_instances = pred_instances[topk_idxs]
+            # d) format detections
+            dets = []
+            object_ids = getattr(
+                pred_instances,
+                'object_ids',
+                [None] * len(pred_instances)
+            )
+            for j in range(len(pred_instances.bboxes)):
+                bbox = pred_instances.bboxes[j].tolist()
+                score = float(pred_instances.scores[j])
+                class_id = int(pred_instances.labels[j])
+                object_id = (
+                    int(object_ids[j]) if object_ids[j] is not None else None
+                )
+                dets.append([bbox, score, class_id, object_id])
+            results.append(dets)
+
+        return results
 
 if __name__ == "__main__":
     # Example usage

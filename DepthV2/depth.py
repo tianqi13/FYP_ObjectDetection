@@ -56,6 +56,35 @@ class DepthEstimator:
         
         return depth
     
+    def estimate_depth_batch(self, image_list, input_size, normalise=True):
+        """
+        Estimate depth from a batch of images.
+        
+        Args:
+            image_list (List[np.ndarray]): List of H×W×3 RGB images.
+            input_size (int): Size to use for preprocessing.
+            normalise (bool): Whether to normalize each depth map to [0, 1].
+        
+        Returns:
+            np.ndarray: Array of shape (B, H, W) containing depth maps.
+        """
+        
+        with torch.no_grad():
+            depth_maps = self.depth_anything.infer_batch(image_list, input_size)
+
+        depth_maps = np.stack(depth_maps, axis=0)
+
+        if normalise:
+            normalized = []
+            for dm in depth_maps:
+                dmin, dmax = dm.min(), dm.max()
+                if dmax > dmin:
+                    dm = (dm - dmin) / (dmax - dmin)
+                normalized.append(dm)
+            depth_maps = np.stack(normalized, axis=0)
+
+        return depth_maps
+    
     def colorize_depth(self, depth_map, cmap=cv2.COLORMAP_INFERNO):
         """
         Colorize depth map for visualization
