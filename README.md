@@ -54,7 +54,7 @@ wget -P EfficientViTSAM/assets/checkpoints/efficientvit_sam https://huggingface.
 ```
 
 ## Run Demo 
-The 2 python scripts for demonstration are: 
+The 2 python scripts for Object Detection demonstration are: 
 1. run_image.py: This draws bounding boxes on an input image. The output image is labelled output_bbox_image.png
 2. run_video.py: This draws bounding boxes on an input video. The output video is labelled output_bbox_video.mp4
 

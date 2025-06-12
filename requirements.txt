@@ -10,9 +10,16 @@ albumentations
 matplotlib
 supervision
 xformers==0.0.27.post2
+open3d
+onnx
+onnxsim
+OmegaConf
 
 timm
 tqdm
 scipy
 huggingface-hub
 pycocotools
+
+git+https://github.com/alibaba/TinyNeuralNetwork.git
+git+https://github.com/facebookresearch/segment-anything.git
