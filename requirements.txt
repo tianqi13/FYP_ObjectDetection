@@ -5,7 +5,7 @@ mmdet==3.0.0
 mmengine==0.10.7
 mmyolo==0.6.0
 timm==1.0.15
-transformers==4.51.3
+transformers==4.46.3
 albumentations
 matplotlib
 supervision
@@ -15,7 +15,6 @@ onnx
 onnxsim
 OmegaConf
 
-timm
 tqdm
 scipy
 huggingface-hub

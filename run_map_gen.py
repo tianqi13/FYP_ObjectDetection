@@ -3,6 +3,7 @@ import os
 import cv2
 import time
 import torch
+torch.cuda.empty_cache()
 import numpy as np
 import open3d as o3d
 
@@ -43,9 +44,9 @@ colours = [
     (  0, 128, 128)   # Teal
 ]
 
-keyframe_txt = 'map_gen/keyframe_images.txt'
-keyframe_L = 'map_gen/img_L_kp'
-keyframe_R = 'map_gen/img_R_kp'
+keyframe_txt = '/home/pro/Desktop/tianqi_FYP/ROS/keyframe_images11.txt'
+keyframe_L = '/home/pro/Desktop/tianqi_FYP/ROS/img_L_kp11'
+keyframe_R = '/home/pro/Desktop/tianqi_FYP/ROS/img_R_kp11'
 # Initialize models
 detector = ObjectDetector(model_weights='finetuned', class_names=class_names)
 # depth_estimator = DepthEstimator(model_config='vits')
@@ -78,7 +79,8 @@ with open(keyframe_txt, 'r') as f:
             
 
         # IF USING RoMa
-        pred_disp = matcher.get_disparity(left_path, right_path, cert_thr=0.1)
+        pred_disp = matcher.get_disparity(left_path, right_path, cert_thr=0.3)
+        torch.cuda.empty_cache()
         point_cloud = matcher.get_a_point_cloud(pred_disp, img_seg_masks, T, scale=1.0)
         print(f"Number of points in the point cloud: {len(np.asarray(point_cloud.points))}")
         all_pcds.append(point_cloud)
@@ -91,5 +93,5 @@ combined_pc = o3d.geometry.PointCloud()
 for p in all_pcds:
     combined_pc += p
 
-o3d.io.write_point_cloud(output_path+'/combined_pc.ply', combined_pc)
+o3d.io.write_point_cloud(output_path+'/combined_pc11.ply', combined_pc)
 

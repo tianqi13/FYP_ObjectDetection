@@ -11,7 +11,7 @@ from depth import DepthEstimator
 from bbox3d import BBox3d
 
 # ''' CHANGE CONFIGURATIONS IF NEEDED
-path_to_image = 'img_L.png'
+path_to_image = 'test_images/img_coke.png'
 class_names = ['bottle','cone','cup','rubiks cube','soda can','star','valve','weight','wooden cube']
 detector = ObjectDetector(model_weights='finetuned', class_names=class_names)   #can change between 'pretrained', 'finetuned' and 'prompt-tuned'
 depth_estimator = DepthEstimator(model_config='vits')     
