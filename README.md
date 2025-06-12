@@ -1,5 +1,6 @@
-# Object Detection with 3D Bounding Boxes
+# Object Detection with 3D Bounding Boxes and Map Generation
 A YOLO-World and DepthAnythingV2 based object detection pipeline for underwater object detection. 
+This project then uses YOLO-World, EfficientVitSAM and RoMA to generate a 3D map of the environment.
 
 ## Installation Steps
 1. Clone this repository
@@ -53,7 +54,7 @@ mkdir -p EfficientViTSAM/assets/checkpoints/efficientvit_sam
 wget -P EfficientViTSAM/assets/checkpoints/efficientvit_sam https://huggingface.co/mit-han-lab/efficientvit-sam/resolve/main/efficientvit_sam_l0.pt
 ```
 
-## Run Demo 
+## Run Demo for Object Detection
 The 2 python scripts for Object Detection demonstration are: 
 1. run_image.py: This draws bounding boxes on an input image. The output image is labelled output_bbox_image.png
 2. run_video.py: This draws bounding boxes on an input video. The output video is labelled output_bbox_video.mp4
@@ -77,13 +78,14 @@ You can also download a sample video "test.mp4".
 ```bash
 wget https://huggingface.co/Tianqi13/FYP_ObjectDetection/resolve/main/test.mp4
 ```
-
+## Run Demo for Map Generation
 For the map generation pipeline, you can run the script `run_map_gen.py`. 
 
 However, you will need to change the camera intrinsics, the `K.txt` file in the RoMa folder. 
 
-You will also need to provide the left and right keyframe images for stereo matching, and also the keyframe text file that contains the image name, tx, ty, tx, (T_cw) and qx, qy, qz, qw (Quaternion matrix for R_cw) for each keyframe.Change the paths in the script to point to your keyframe images and text file.
+You will also need to provide the left and right keyframe images for stereo matching, and also the keyframe text file that contains the image name, tx, ty, tx, (T_cw) and qx, qy, qz, qw (Quaternion matrix for R_cw) for each keyframe. 
 
+Change the paths in the script to point to your keyframe images and text file:
 '''python 
 keyframe_txt = 'map_gen/keyframe_images.txt'
 keyframe_L = 'map_gen/img_L_kp'
