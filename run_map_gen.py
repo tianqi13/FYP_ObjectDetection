@@ -32,16 +32,16 @@ depth_size = 720
 output_path = '/home/pro/Desktop/tianqi_FYP/FYP_ObjectDetection'
 # 4) for EfficientViTSAM
 colours = [
-    (255,   0,   0),  # Red
-    (  0, 255,   0),  # Lime/Green
-    (  0,   0, 255),  # Blue
-    (255, 255,   0),  # Yellow
+    (255,  20, 147),  # Neon Pink
+    ( 57, 255,  20),  # Electric Green
+    (  0, 255, 255),  # Cyan / Neon Blue
+    (255, 255,   0),  # Bright Yellow
+    (255,  92,  51),  # Neon Orange
+    (180,   0, 255),  # Vivid Purple
     (255,   0, 255),  # Magenta
-    (  0, 255, 255),  # Cyan
-    (255, 165,   0),  # Orange
-    (128,   0, 128),  # Purple
-    (191, 255,   0),  # Chartreuse
-    (  0, 128, 128)   # Teal
+    (  0, 255, 128),  # Spring Green / Aqua
+    (  0, 255,  64),  # Lime Glow
+    (  0, 128, 255),  # Vivid Sky Blue
 ]
 
 keyframe_txt = '/home/pro/Desktop/tianqi_FYP/ROS/keyframe_images11.txt'
