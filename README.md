@@ -92,5 +92,17 @@ keyframe_L = 'map_gen/img_L_kp'
 keyframe_R = 'map_gen/img_R_kp'
 '''
 
+## Acknowledgements 
+[YOLO-World](https://github.com/AILab-CVC/YOLO-World) for the object detection model 
+[DepthAnythingV2](https://github.com/DepthAnything/Depth-Anything-V2) for the relative depth estimation model
+[EfficientViTSAM](https://github.com/mit-han-lab/efficientvit) for the image segmentation model 
+[RoMa](https://github.com/Parskatt/RoMa) for the feature matching model 
+[FoundationStereo](https://github.com/NVlabs/FoundationStereo/) for the point cloud generation functions 
+[YOLO-3D-GUI](https://github.com/Pavankunchala/Yolo-3d-GUI) for the bbox3d class 
+
+
+
+
+
 
 
