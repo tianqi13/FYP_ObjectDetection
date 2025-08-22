@@ -2,6 +2,7 @@ _base_ = ['../_base_/default_runtime.py', '../_base_/det_p5_tta.py']
 
 # ========================Frequently modified parameters======================
 # -----data related-----
+# TODO: Change the paths in this section
 data_root = '/vol/bitbucket/th1422/YOLO-World/vscode/3d/YOLO_world/data'  # Root path of data
 # Path of train annotation file
 train_ann_file = '/vol/bitbucket/th1422/YOLO-World/vscode/3d/YOLO_world/data/train/_annotations.coco.json'
@@ -9,6 +10,7 @@ train_data_prefix = '/train'  # Prefix of train image path
 # Path of val annotation file
 val_ann_file = '/vol/bitbucket/th1422/YOLO-World/vscode/3d/YOLO_world/data/valid/_annotations.coco.json'
 val_data_prefix = '/valid'  # Prefix of val image path
+# ````
 
 num_classes = 5  # Number of classes for classification
 # Batch size of a single GPU during training

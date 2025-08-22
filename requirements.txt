@@ -12,7 +12,6 @@ supervision
 xformers==0.0.27.post2
 open3d
 onnx
-onnxsim
 OmegaConf
 
 tqdm

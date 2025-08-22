@@ -12,6 +12,7 @@ from bbox3d import BBox3d
 
 # ''' CHANGE CONFIGURATIONS IF NEEDED
 path_to_image = 'test_images/img_coke.png'
+output_path = 'output_bbox_image.png'
 class_names = ['bottle','cone','cup','rubiks cube','soda can','star','valve','weight','wooden cube']
 detector = ObjectDetector(model_weights='finetuned', class_names=class_names)   #can change between 'pretrained', 'finetuned' and 'prompt-tuned'
 depth_estimator = DepthEstimator(model_config='vits')     
@@ -71,7 +72,7 @@ for i, detection in enumerate(detections):
 BBox3D_visualiser = BBox3d(boxes_3d, frame)
 result_frame = BBox3D_visualiser.draw_box_3d()
 
-cv2.imwrite('output_bbox_image.png', result_frame)
+cv2.imwrite(output_path, result_frame)
 
 
 

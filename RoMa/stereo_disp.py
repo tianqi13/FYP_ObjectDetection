@@ -127,13 +127,28 @@ class RoMaMatcher:
         if not np.any(valid):
             raise RuntimeError("No valid disparity pixels > 0!")
         depth = np.zeros_like(disp, dtype=np.float32)
-        depth[valid] = baseline * K[0, 0] / disp[valid]
+        depth[valid] = baseline * K[0, 0] / disp[valid]        
         
         xyz_map = self.depth2xyzmap(depth, K)
-        pcd = self.toOpen3dCloud(xyz_map.reshape(-1,3), frame0_ori.reshape(-1,3))
-        # keep_mask = (np.asarray(pcd.points)[:,2]>0) & (np.asarray(pcd.points)[:,2]<=10)
-        # keep_ids = np.arange(len(np.asarray(pcd.points)))[keep_mask]
-        # pcd = pcd.select_by_index(keep_ids)
+        points = xyz_map.reshape(-1, 3)
+        
+        # toOpen3dCloud expects colors in RGB format
+        frame0_ori = cv2.cvtColor(frame0_ori, cv2.COLOR_BGR2RGB)
+        colors = frame0_ori.reshape(-1, 3)  
+        
+        
+        keep_mask = (points[:,2] > 0) & (points[:,2] <= 10)
+        pts_filt   = points[keep_mask]     
+        cols_filt  = colors[keep_mask]   
+        
+        ones = np.ones((pts_filt.shape[0], 1))
+        points_hom = np.hstack([pts_filt, ones])  # shape (N, 4)
+
+        points_world_hom = (T_mat @ points_hom.T).T
+        points_world = points_world_hom[:, :3]
+        
+        pcd = self.toOpen3dCloud(points_world, cols_filt)
+        
         o3d.io.write_point_cloud(output_dir+'/cloudRoMa.ply', pcd)
     
     def get_a_point_cloud(self, disp, frame0_ori, T_mat, scale=1):
@@ -151,7 +166,12 @@ class RoMaMatcher:
         
         xyz_map = self.depth2xyzmap(depth, K)
         points = xyz_map.reshape(-1, 3)
+        
+        # toOpen3dCloud expects colors in RGB format
+        frame0_ori = cv2.cvtColor(frame0_ori, cv2.COLOR_BGR2RGB)
         colors = frame0_ori.reshape(-1, 3)  
+        
+        
         keep_mask = (points[:,2] > 0) & (points[:,2] <= 10)
         pts_filt   = points[keep_mask]     
         cols_filt  = colors[keep_mask]   

@@ -71,12 +71,12 @@ class SegmentationModel:
 
         return results
     
-    def overlay_masks(self, frame, masks, object_ids, colours, alpha=0.3):
+    def overlay_masks(self, frame, masks, object_ids, colours, alpha=0.9):
         """
         Overlay segmentation masks on frame with improved visibility
         
         Args:
-            frame (numpy.ndarray): Input frame (RGB format)
+            frame (numpy.ndarray): Input frame
             masks (list): List of dicts with key 'mask' containing boolean masks
             alpha (float): Transparency factor (lower value = more transparent masks)
             
@@ -93,8 +93,8 @@ class SegmentationModel:
             # ensure boolean mask
             binary = mask.astype(bool)
             color = colours[object_ids[i]]
-            color = (color[2], color[1], color[0]) # convert to BGR for OpenCV
-
+            color = (color[2], color[1], color[0])  # convert to BGR to match the BGR image
+            
             # for each channel, blend only where mask is True
             for c in range(3):
                 fg_val = color[c]

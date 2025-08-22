@@ -8,7 +8,6 @@ class BBox3d:
         
         Args:
             box_3d (list): List of 3D bounding box parameters (dict)
-            image (numpy.ndarray): Image to draw on
         """
         self.box_3d = box_3d
         self.image = image
@@ -18,7 +17,11 @@ class BBox3d:
             Draw enhanced 3D bounding box on image with better depth perception
             
             Args:
+                image (numpy.ndarray): Image to draw on
+                box_3d (dict): 3D bounding box parameters
+                color (tuple): Color in BGR format
                 thickness (int): Line thickness
+                
             Returns:
                 numpy.ndarray: Image with 3D box drawn
             """
@@ -85,7 +88,6 @@ class BBox3d:
                 # Fill the right face with a semi-transparent color
                 pts_right = np.array([front_tr, front_br, back_br, back_tr], np.int32)
                 pts_right = pts_right.reshape((-1, 1, 2))
-                
                 # Darken the right face color for better 3D effect
                 right_color = (int(color[0] * 0.7), int(color[1] * 0.7), int(color[2] * 0.7))
                 cv2.fillPoly(overlay, [pts_right], right_color)

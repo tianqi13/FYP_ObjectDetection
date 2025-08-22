@@ -3,7 +3,6 @@ import os
 import cv2
 import time
 import torch
-torch.cuda.empty_cache()
 import numpy as np
 import open3d as o3d
 
@@ -22,14 +21,13 @@ from stereo_disp import RoMaMatcher
 # Configurations
 # 1) for YOLO World
 class_names=['bottle','cone','cup','rubiks cube','soda can','star','valve','weight','wooden cube']
-score_thr = 0.5
-nms_thr = 0.7
+score_thr = 0.68
+nms_thr = 0.5
 max_num_boxes = 100
 # 2) for DAv2
 depth_size = 720
-
 # 3b) for RoMa
-output_path = '/home/pro/Desktop/tianqi_FYP/FYP_ObjectDetection'
+output_path = '/home/pro/Desktop/tianqi_FYP/FYP_ObjectDetection/point_clouds'
 # 4) for EfficientViTSAM
 colours = [
     (255,  20, 147),  # Neon Pink
@@ -44,54 +42,50 @@ colours = [
     (  0, 128, 255),  # Vivid Sky Blue
 ]
 
-keyframe_txt = '/home/pro/Desktop/tianqi_FYP/ROS/keyframe_images11.txt'
-keyframe_L = '/home/pro/Desktop/tianqi_FYP/ROS/img_L_kp11'
-keyframe_R = '/home/pro/Desktop/tianqi_FYP/ROS/img_R_kp11'
+keyframes = [0, 4, 5, 6, 8, 9, 10]
+
 # Initialize models
 detector = ObjectDetector(model_weights='finetuned', class_names=class_names)
-# depth_estimator = DepthEstimator(model_config='vits')
 segmenter = SegmentationModel(model_config='l0')
-# stereo_model = DisparityEstimator(dtype=dtype)
-# stereo_model = DisparityDetector(output_path, 'large')
 matcher = RoMaMatcher(coarse_res=420, upsample_res=(720, 1280))
 
-all_pcds = []
+for kf_num in keyframes:
+    print(f"Processing keyframe set {kf_num}...")
+    all_pcds = []
+    keyframe_txt = f'/home/pro/Desktop/tianqi_FYP/ROS/keyframe_images{kf_num}.txt'
+    keyframe_L = f'/home/pro/Desktop/tianqi_FYP/ROS/img_L_kp{kf_num}'
+    keyframe_R = f'/home/pro/Desktop/tianqi_FYP/ROS/img_R_kp{kf_num}'
 
-with open(keyframe_txt, 'r') as f:
-    for idx, line in enumerate(f, start=1):
-        print(f"Processing keyframe {idx}...")
-        start_time = time.time()
-        file_name, T = get_transformation_matrix(line)
-        left_path  = os.path.join(keyframe_L, file_name)
-        right_path = os.path.join(keyframe_R, file_name)
-        left_image  = cv2.imread(left_path)
-        right_image = cv2.imread(right_path)
-    
-        # Run Inference
-        detections = detector.detect(left_image, max_num_boxes=max_num_boxes, score_thr=score_thr, nms_thr=nms_thr)
-        if detections:
-            boxes = [detection[0] for detection in detections]
-            object_ids = [detection[2] for detection in detections]
-            seg_masks = segmenter.segment_with_boxes(left_image, boxes)
-            img_seg_masks = segmenter.overlay_masks(left_image, seg_masks, object_ids, colours)
-        else:
-            img_seg_masks = left_image.copy()
+    with open(keyframe_txt, 'r') as f:
+        for idx, line in enumerate(f, start=1):
+            print(f"Processing keyframe {idx}...")
+            file_name, T = get_transformation_matrix(line)
+            left_path  = os.path.join(keyframe_L, file_name)
+            right_path = os.path.join(keyframe_R, file_name)
+            left_image  = cv2.imread(left_path) # BGR format
+            right_image = cv2.imread(right_path)
+        
+            # Run Inference
+            detections = detector.detect(left_image, max_num_boxes=max_num_boxes, score_thr=score_thr, nms_thr=nms_thr) # YOLO-World expects BGR images
+            if detections:
+                boxes = [detection[0] for detection in detections]
+                object_ids = [detection[2] for detection in detections]
+                seg_masks = segmenter.segment_with_boxes(left_image, boxes)
+                img_seg_masks = segmenter.overlay_masks(left_image, seg_masks, object_ids, colours) # BGR
+            else:
+                img_seg_masks = left_image.copy() # BGR
+                
+            
+            # IF USING RoMa
+            pred_disp = matcher.get_disparity(left_path, right_path, cert_thr=0.3)
+            point_cloud = matcher.get_a_point_cloud(pred_disp, img_seg_masks, T, scale=1.0)
+            all_pcds.append(point_cloud)
             
 
-        # IF USING RoMa
-        pred_disp = matcher.get_disparity(left_path, right_path, cert_thr=0.3)
-        torch.cuda.empty_cache()
-        point_cloud = matcher.get_a_point_cloud(pred_disp, img_seg_masks, T, scale=1.0)
-        print(f"Number of points in the point cloud: {len(np.asarray(point_cloud.points))}")
-        all_pcds.append(point_cloud)
-        
-        end_time = time.time()
-        print(f"Processed {file_name} in {end_time - start_time:.2f} seconds")
+    combined_pc = o3d.geometry.PointCloud()
 
-combined_pc = o3d.geometry.PointCloud()
-
-for p in all_pcds:
-    combined_pc += p
-
-o3d.io.write_point_cloud(output_path+'/combined_pc11.ply', combined_pc)
+    for p in all_pcds:
+        combined_pc += p
+    output_file = f'{output_path}/combined_pc{kf_num}.ply'
+    o3d.io.write_point_cloud(output_file, combined_pc)
 

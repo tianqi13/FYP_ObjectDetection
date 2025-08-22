@@ -244,9 +244,21 @@ def render_worker(detect_q, output_path, depth_estimator, fps, frame_size, class
         f"(avg {render_time/frame_count:.3f}s/frame)")
 
 if __name__ == "__main__":
+    
+    # ''' CHANGE CONFIGURATIONS IF NEEDED
     source = "test.mp4"  # Path to input video file
     output_path = "output_bbox_video.mp4"  # Path to output video file
     class_names=['bottle','cone','cup','rubiks cube','soda can','star','valve','weight','wooden cube']
+    detector = ObjectDetector(model_weights='finetuned', class_names=class_names)
+    depth_estimator = DepthEstimator(model_config='vits')
+    score_thr = 0.5
+    nms_thr = 0.7
+    detection_batch_size = 4  # Detection is faster than depth estimation, so use a smaller batch size than depth to reduce bottleneck
+    depth_batch_size = 10
+    depth_interval = 8 # Compute depth every N frames to reduce load
+    depth_input_size = 720 # The size of a frame
+    # '''
+
     colours = [
         (255,   0,   0),  # Red
         (  0, 255,   0),  # Lime/Green
@@ -259,16 +271,6 @@ if __name__ == "__main__":
         (191, 255,   0),  # Chartreuse
         (  0, 128, 128)   # Teal
     ]
-    score_thr = 0.5
-    nms_thr = 0.7
-    detection_batch_size = 4  # Detection is faster than depth estimation, so use a smaller batch size than depth to reduce bottleneck
-    depth_input_size = 720 # Smaller size for faster processing, but less accurate. Adjust as needed
-    depth_interval = 8 # Compute depth every N frames to reduce load
-    depth_batch_size = 10
-
-    # Initialise models
-    detector = ObjectDetector(model_weights='finetuned', class_names=class_names)
-    depth_estimator = DepthEstimator(model_config='vits')
 
     # Open video source
     print(f"Opening video source: {source}")
