@@ -15,9 +15,10 @@ This repository contains the code from my Final Year Project at Imperial College
 
 The project utilises a _YOLO-World_ object detection model trained on a self-collected dataset of around 1000 images and 9 object classes. _DepthAnythingV2_ is used to generate the depth maps and to obtain relative depths of objects in a scene. This pipeline is able to run real-time at about 4.7FPS on laptop hardware. 
 
-Underwater map generation is achieved through the use of _YOLO-World_ for object detection, _EfficientViTSAM_ for image segmentation, and an adaptation of the _RoMa_ feature matching model for stereo matching. The output of this pipeline is a dense point cloud with semantic annotations of objects of interest. An example of the point cloud generated of a valve and cone placed underwater is shown below. 
+Underwater map generation is achieved through the use of _YOLO-World_ for object detection, _EfficientViTSAM_ for image segmentation, and an adaptation of the _RoMa_ feature matching model for stereo matching. The output of this pipeline is a dense point cloud with semantic annotations of objects of interest. Examples of the annotated point clouds are shown below.
 
-![overview](imgs/valve_img.jpeg) ![overview](imgs/valve_pc.png)
+![valve and cone](imgs/valve_cone.png)
+![valve](imgs/valve.png)
 
 ## Installation Steps
 1. Clone this repository
