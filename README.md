@@ -1,6 +1,23 @@
-# Object Detection with 3D Bounding Boxes and Map Generation
-A YOLO-World and DepthAnythingV2 based object detection pipeline for underwater object detection. 
-This project then uses YOLO-World, EfficientVitSAM and RoMA to generate a 3D map of the environment.
+# Vision-Enabled Underwater Robots for Autonomous Operations
+
+This repository contains the code from my Final Year Project at Imperial College London 2025. This project introduces an __Underwater Detection and Semantic Mapping Framework__ developed and deployed on a BlueROV2 robot as part of a broader effort to enable vision-based autonomous underwater operations.
+
+## Contents
+- [Overview](#overview)
+- [Installation](#installation-steps)
+- [Run Demo for Object Detection](#run-demo-for-object-detection)
+- [Run Demo for Map Generation](#run-demo-for-map-generation)
+- [Acknowledgements](#acknowledgements)
+
+## Overview
+
+![gif_overview](imgs/ros.gif)
+
+The project utilises a _YOLO-World_ object detection model trained on a self-collected dataset of around 1000 images and 9 object classes. _DepthAnythingV2_ is used to generate the depth maps and to obtain relative depths of objects in a scene. This pipeline is able to run real-time at about 4.7FPS on laptop hardware. 
+
+Underwater map generation is achieved through the use of _YOLO-World_ for object detection, _EfficientViTSAM_ for image segmentation, and an adaptation of the _RoMa_ feature matching model for stereo matching. The output of this pipeline is a dense point cloud with semantic annotations of objects of interest. An example of the point cloud generated of a valve and cone placed underwater is shown below. 
+
+![overview](imgs/valve_img.jpeg) ![overview](imgs/valve_pc.png)
 
 ## Installation Steps
 1. Clone this repository
