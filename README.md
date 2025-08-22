@@ -7,6 +7,7 @@ This repository contains the code from my Final Year Project at Imperial College
 - [Installation](#installation-steps)
 - [Run Demo for Object Detection](#run-demo-for-object-detection)
 - [Run Demo for Map Generation](#run-demo-for-map-generation)
+- [Steps to train YOLO-World model](#steps-to-train-yolo-world-model)
 - [Acknowledgements](#acknowledgements)
 
 ## Overview
@@ -133,7 +134,7 @@ Also change the output path where the point clouds will be saved:
 output_path = '/home/pro/Desktop/tianqi_FYP/FYP_ObjectDetection/point_clouds'
 ```
 
-### Steps to train a model 
+## Steps to train YOLO-World model
 1. Edit the **mmdet** python package files to include your custom dataset. 
 In the ~lib/python/site-packages/mmdet/datasets folder, create a new python file (e.g. tank.py). Follow the format of the example file in this repository's YOLO_world/example_files/tank.py. 
 Then, edit the "\_\_init.py\_\_" file in lib/python/site-packages/mmdet/datasets as well to include your dataset. An example is in the YOLO_world/example_files/init_mmdet.py. 
